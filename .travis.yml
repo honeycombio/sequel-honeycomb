@@ -1,0 +1,14 @@
+language: ruby
+rvm:
+  - 2.2
+  - 2.3
+  - 2.4
+deploy:
+  provider: rubygems
+  api_key:
+    secure: M9SZe40v7ZmOg3OzRlp7oRFG4z5UAt/FKf0Bv0hwKJGbvqYKFmdxdvxaS2pqHd+NOxF2eITW5hdFirh09HwQTFhesBsjCFXgXmr+KLA6rAG3BpWJeyDb/ul72+MpC25XlCjIc5jRdIo+2s9eKVAHp948It0Qe9wRTkL+g3TwuDtOoZYnjQndj2Mbn5ui85KtFGu5QE/WVqoqruZh5qM9yVfLddSMEIqp6ifId871Rl8mD6Yk1cLDoCoM6cy2gRsMDdDCJn95w17FSHb84XuW/wTDmCFptNdDWIYmpIHw7Vtn7aN8cWliflLqkalCqaSeGg/wWxEq1uM2Yk6YpobE3xJNIGx0aZompgsLEnEVaJTjJmHWd5Pl4S53/HG8yaDzROUEJcShKaa8gtLf6iT4u1JB3r+dQNwYtsoXxDxTNAcKqpwIsvqA/cZkQRApRPMmb3s3XaXZd/Q3O51jL2cPNNzY14i3xgWye7x+acZSeO1CxXntMz6VsnxXZB97bqTWnIEGwtx/42qbUFnARzMAyKLBcXh/1VueCQJRjJp8JPwULu2zLSN5QlvzEXfx/SSOJHzFztMiG+PypO6nBSQwQZk21JIkQhkPbyKxdGMjpJ7IWwQPIIzbVFIlBFmFr5t8TY2z03EOS/ehigeSy3lAHIahDSKYhVJu9tnvM15cv1Q=
+  gem: sequel-honeycomb
+  on:
+    tags: true
+    repo: honeycombio/sequel-honeycomb
+    ruby: '2.4'
