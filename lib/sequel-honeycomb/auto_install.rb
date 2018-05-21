@@ -10,12 +10,9 @@ module Sequel
         end
 
         def auto_install!(honeycomb_client:, logger: nil)
-          require 'sequel'
-          require 'sequel/extensions/honeycomb'
+          require 'sequel/honeycomb'
 
-          # TODO is this the right way?
-          # TODO inject client
-          Sequel::Database.extension :honeycomb
+          Sequel::Honeycomb.register!(honeycomb_client: honeycomb_client, logger: logger)
         end
       end
     end

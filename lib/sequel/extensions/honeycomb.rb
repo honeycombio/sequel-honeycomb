@@ -1,21 +1,26 @@
 module Sequel
   module Extensions
     module Honeycomb
-      def self.included(mod)
-        # TODO ugh clean this up
-        puts "included"
-        @_honeycomb ||= begin
-          puts "HONEYCOMBING"
-          if defined?(::Honeycomb.client)
-            ::Honeycomb.client.tap do |klient|
-              puts "client is #{klient.nil? ? :nil : :lin}"
+      class << self
+        attr_accessor :client
+        attr_accessor :logger
+
+        def included(mod)
+          # TODO ugh clean this up
+          @logger.debug "included" if @logger
+          @client ||= begin
+            @logger.debug "HONEYCOMBING" if @logger
+            if defined?(::Honeycomb.client)
+              ::Honeycomb.client.tap do |klient|
+                @logger.debug "client is #{klient.nil? ? :nil : :lin}" if @logger
+              end
+            else
+              raise "Can't work without magic global Honeycomb.client at the moment"
             end
-          else
-            raise "Can't work without magic global Honeycomb.client at the moment"
           end
-        end
-        mod.class_exec(@_honeycomb) do |honeycomb_|
-          define_method(:honeycomb) { honeycomb_ }
+          mod.class_exec(@client) do |honeycomb_|
+            define_method(:honeycomb) { honeycomb_ }
+          end
         end
       end
 
