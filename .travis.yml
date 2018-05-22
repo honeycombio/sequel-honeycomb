@@ -3,6 +3,11 @@ rvm:
   - 2.2
   - 2.3
   - 2.4
+services:
+  - postgresql
+before_script:
+  - psql -U postgres -c 'CREATE DATABASE "sequel-honeycomb-test"'
+  - bundle exec rake spec:db:setup_schema
 deploy:
   provider: rubygems
   api_key:
