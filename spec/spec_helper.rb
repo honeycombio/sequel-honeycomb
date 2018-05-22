@@ -1,4 +1,20 @@
+require 'support/db'
+
 RSpec.configure do |config|
+  config.before(:suite) do
+    TestDB.connect!
+  end
+  config.after(:suite) do
+    TestDB.disconnect!
+  end
+
+  config.before(:example) do
+    TestDB.db.run 'BEGIN'
+  end
+  config.after(:example) do
+    TestDB.db.run 'ROLLBACK'
+  end
+
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`
     # and `failure_message` of custom matchers include text for helper methods
