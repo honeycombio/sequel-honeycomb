@@ -12,7 +12,7 @@ module Sequel
         def auto_install!(honeycomb_client:, logger: nil)
           require 'sequel/honeycomb'
 
-          Sequel::Honeycomb.register!(honeycomb_client: honeycomb_client)
+          Sequel::Honeycomb.register!(client: honeycomb_client, logger: logger)
         end
       end
     end
