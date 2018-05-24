@@ -62,13 +62,12 @@ module Sequel
 
         trace_id = ::Honeycomb.trace_id
 
-        event.add_field :traceId, trace_id if trace_id
+        event.add_field 'trace.trace_id', trace_id if trace_id
         span_id = SecureRandom.uuid
-        event.add_field :id, span_id
-        event.add_field :serviceName, 'sequel'
+        event.add_field 'trace.span_id', span_id
 
         ::Honeycomb.with_span_id(span_id) do |parent_span_id|
-          event.add_field :parentId, parent_span_id
+          event.add_field 'trace.parent_id', parent_span_id
           yield
         end
       end
