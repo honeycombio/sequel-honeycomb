@@ -18,7 +18,7 @@ module TestDB
     end
 
     def connect!
-      Sequel::Honeycomb.register! client: $fakehoney
+      Sequel::Honeycomb.install! client: $fakehoney
 
       @db ||= Sequel.connect(**config)
     end
