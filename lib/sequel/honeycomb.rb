@@ -4,9 +4,12 @@ require 'sequel/extensions/honeycomb'
 module Sequel
   module Honeycomb
     class << self
-      def register!(client: nil, logger: nil)
+      def install!(client: nil, logger: nil)
         if client
           Sequel::Extensions::Honeycomb.client = client
+        end
+        if logger
+          Sequel::Extensions::Honeycomb.logger = logger
         end
 
         Sequel::Database.extension :honeycomb

@@ -3,31 +3,37 @@ module Sequel
     module Honeycomb
       class << self
         attr_accessor :client
+        attr_reader :builder
+        attr_accessor :logger
 
-        def included(mod)
-          # TODO ugh clean this up
-          @client ||= begin
-            if defined?(::Honeycomb.client)
-              ::Honeycomb.client
-            else
-              raise "Can't work without magic global Honeycomb.client at the moment"
-            end
+        def included(klazz)
+          if @client
+            debug "initialized with #{@client.class.name} explicitly provided"
+          elsif defined?(::Honeycomb.client)
+            debug "initialized with #{::Honeycomb.client.class.name} from honeycomb-beeline"
+            @client = ::Honeycomb.client
+          else
+            raise "Please set #{self.name}.client before using this extension"
           end
-          mod.class_exec(@client) do |honeycomb_|
-            define_method(:builder) do
-              honeycomb_.builder.add(
-                'meta.package' => 'sequel',
-                'meta.package_version' => Sequel::VERSION,
-                'type' => 'db',
-              )
-            end
-          end
+
+          @builder ||= @client.builder.add(
+            'meta.package' => 'sequel',
+            'meta.package_version' => Sequel::VERSION,
+            'type' => 'db',
+          )
+        end
+
+        private
+        def debug(msg)
+          @logger.debug("#{self.name}: #{msg}") if @logger
         end
       end
 
-      def execute(sql, opts=OPTS, &block)
-        raise 'something went horribly wrong' unless builder # TODO
+      def builder
+        Sequel::Extensions::Honeycomb.builder
+      end
 
+      def execute(sql, opts=OPTS, &block)
         event = builder.event
 
         event.add_field 'db.table', first_source_table.to_s rescue nil

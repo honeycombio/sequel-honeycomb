@@ -21,7 +21,6 @@ RSpec.shared_examples_for 'records a database query' do |name:, sql_match:, sql_
 
   it 'records the parameterised SQL query rather than the literal parameter values' do
     pending 'find out if this is feasible for Sequel'
-
     expect(last_event.data['db.sql']).to_not match(sql_not_match)
   end if sql_not_match
 
