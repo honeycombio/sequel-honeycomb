@@ -7,6 +7,8 @@ module Sequel
         attr_accessor :logger
 
         def included(klazz)
+          @logger ||= ::Honeycomb.logger if defined?(::Honeycomb.logger)
+
           if @client
             debug "initialized with #{@client.class.name} explicitly provided"
           elsif defined?(::Honeycomb.client)
