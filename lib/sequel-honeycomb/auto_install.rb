@@ -6,7 +6,7 @@ module Sequel
           gem 'sequel'
           logger.debug "#{self.name}: detected sequel, okay to autoinitialise" if logger
           true
-        rescue Gem::LoadError
+        rescue Gem::LoadError => e
           logger.debug "Didn't detect Sequel (#{e.class}: #{e.message}), not autoinitialising sequel-honeycomb" if logger
           false
         end
