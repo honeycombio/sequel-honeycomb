@@ -21,7 +21,6 @@ module Sequel
           @builder ||= @client.builder.add(
             'meta.package' => 'sequel',
             'meta.package_version' => Sequel::VERSION,
-            'type' => 'db',
           )
         end
 
@@ -40,9 +39,8 @@ module Sequel
 
         event.add_field 'db.table', first_source_table.to_s rescue nil
         event.add_field 'db.sql', sql
-        event.add_field 'name', query_name(sql)
         start = Time.now
-        adding_span_metadata_if_available(event) do
+        with_tracing_if_available(event, query_name(sql)) do
           super
         end
       rescue Exception => e
@@ -65,17 +63,10 @@ module Sequel
         sql.sub(/\s+.*/, '').upcase
       end
 
-      def adding_span_metadata_if_available(event)
-        return yield unless defined?(::Honeycomb.trace_id)
+      def with_tracing_if_available(event, name)
+        return yield unless defined?(::Honeycomb::Beeline::VERSION)
 
-        trace_id = ::Honeycomb.trace_id
-
-        event.add_field 'trace.trace_id', trace_id if trace_id
-        span_id = SecureRandom.uuid
-        event.add_field 'trace.span_id', span_id
-
-        ::Honeycomb.with_span_id(span_id) do |parent_span_id|
-          event.add_field 'trace.parent_id', parent_span_id
+        ::Honeycomb.span_for_existing_event(event, name: name, type: 'db') do
           yield
         end
       end
