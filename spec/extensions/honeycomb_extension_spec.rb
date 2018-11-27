@@ -3,6 +3,14 @@ require 'support/fakehoney'
 require 'sequel/extensions/honeycomb'
 
 RSpec.shared_examples_for 'records a database query' do |name:, sql_match:, sql_not_match: nil|
+  it 'sends a db event' do
+    expect(last_event.data['type']).to eq('db')
+  end
+
+  it "sets 'name' to #{name.inspect} (although something more informative would be nicer!)" do
+    expect(last_event.data['name']).to eq(name)
+  end
+
   it 'records the SQL query' do
     expect(last_event.data).to include('db.sql' => sql_match)
   end
