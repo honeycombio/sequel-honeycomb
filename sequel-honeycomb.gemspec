@@ -1,10 +1,9 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH << lib unless $LOAD_PATH.include?(lib)
-require 'sequel/honeycomb/version'
 
 Gem::Specification.new do |gem|
-  gem.name = Sequel::Honeycomb::GEM_NAME
-  gem.version = Sequel::Honeycomb::VERSION
+  gem.name = 'sequel-honeycomb'
+  gem.version = File.read("VERSION").strip
 
   gem.summary = 'Instrument your Sequel queries with Honeycomb'
   gem.description = <<-DESC
